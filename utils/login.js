@@ -1,13 +1,16 @@
 import React from 'react';
 import {Text, View, TextInput, Button} from 'react-native';
+import SocketIoClient from 'socket.io-client';
 import axios from 'axios';
 
 export class CustomInput extends React.Component {
 
     constructor(props) {
-        super(props);
-        this.state = {name: ''};
-
+        super(props)
+        this.state = {name: ''}
+        this.socket = SocketIoClient('http://192.168.0.162:3000')
+        this.socket.on('updateList', (msg) => {
+            console.log(msg, 'on Client')})
     }
 
     _toSend = async () => {

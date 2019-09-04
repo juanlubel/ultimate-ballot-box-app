@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View, Button} from "react-native";
 import {CustomInput} from "./login";
 
 export default class HomeScreen extends React.Component {
@@ -14,6 +14,7 @@ export default class HomeScreen extends React.Component {
             <View style={styles.container}>
                 <Text>The ultimate Ballot Box!</Text>
                 <CustomInput navigation = {this.props.navigation}/>
+                <Text title={'created by juanluis.belda@gmail.com'} onPress={() => {this.props.navigation.navigate('Admin')}} style={{width: 64, height: 64}}></Text>
             </View>
         );
     }

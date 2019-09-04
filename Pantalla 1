@@ -1,0 +1,29 @@
+Pantalla 1
+
+ Pides el login para:
+
+  Controlar que 1 persona vota solo 1 vez
+  Generar la lista de participantes
+
+ En la versión 1, si no entras, no eres candidato y no pudes votar.
+
+Pantalla 2
+
+ Nos muestra la lista completa de candidatos.
+ La lista de personas es seleccionable
+
+ Forma 1:
+  * La lista se actualiza automáticamente cuando alguien entra (ServerComet - Ajax xhtml push - background updates)
+
+ Forma 2:
+  * La aplicación detecta q eres tú y te da un botón de "empezar la votación", que le muestra a todo el mundo la lista de candidatos "disponibles"
+
+ Muestra un botón de votar q se activa una vez hemos seleccionado un candidato.
+
+ Si el usuario eres tú, juanlubel, te muestra el botón terminar votaciones (que hace q todo el mundo se le muestre la pantalla 3) y resetea el contador para empezar de nuevo
+
+ Puedes evitar Ajax poniendo a todos un botón de refresco
+
+Pantalla 3
+
+ Esta pantalla muestra los nombres y votos recibidos de cada persona.
