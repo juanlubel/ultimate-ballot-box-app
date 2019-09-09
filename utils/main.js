@@ -6,20 +6,22 @@ export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {navigation: ''};
-
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <Text>The ultimate Ballot Box!</Text>
-                <CustomInput navigation = {this.props.navigation}/>
-                <Text title={'created by juanluis.belda@gmail.com'} onPress={() => {this.props.navigation.navigate('Admin')}} style={{width: 64, height: 64}}></Text>
+                <CustomInput navigation={this.props.navigation}/>
+                <Text
+                    title={'created by juanluis.belda@gmail.com'}
+                    onPress={() => {
+                        this.props.navigation.navigate('Admin')
+                    }}
+                    style={{width: 64, height: 64}}/>
             </View>
         );
     }
-
-
 }
 
 const styles = StyleSheet.create({

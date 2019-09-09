@@ -11,8 +11,9 @@ const MainNavigator = createStackNavigator(
     {
         Home: {
             screen: HomeScreen,
+            headerMode: 'none',
             navigationOptions: {
-                headerVisible: false ,
+                header: null ,
                 title: 'Welcome!'
             }},
         Profile: {
@@ -24,12 +25,14 @@ const MainNavigator = createStackNavigator(
         Lobby: {
             screen: LobbyScreen,
             navigationOptions: {
+                header: null ,
                 title: 'Lobby'
             }
         },
         Results: {
             screen: ResultScreen,
             navigationOptions: {
+                header: null ,
                 title: 'Results'
             }
         },

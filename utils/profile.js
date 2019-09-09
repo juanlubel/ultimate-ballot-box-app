@@ -14,27 +14,33 @@ export default class ProfileScreen extends React.Component {
         this.state = {
             name: '',
             id: props.navigation.state.params.id,
+            totalParticipants: props.navigation.state.params.participants,
+            actualParticipants: 0,
             tableHead: ['Nombre', 'Votar'],
             tableData: [],
-            voted: []
+            voted: [],
+            show: false,
+            complete: false
         };
-        this.socket = SocketIoClient('http://192.168.0.162:3000')
+/*        let show = false
+        this.setState({show: show})*/
+        this.socket = SocketIoClient('http://juanlubel.hopto.org:3000')
         this.onLoad()
         this.socket.on('updatedList', () => {
             this.loadList()
-            // students = studentsUpdated
         })
-
     }
 
     loadList = async () => {
         await axios.get(
-            'http://192.168.0.162:3000/api/students/'
+            'http://juanlubel.hopto.org:3000/api/students/'
         ).then((response) => {
             let row = []
             let students = response.data.students
-            console.log(students.length)
-
+            this.setState({actualParticipants: students.length})
+            this.setState({'complete':(this.state.actualParticipants == this.state.totalParticipants)})
+            // console.log(this.state)
+            // console.log(this.state.complete, this.state.actualParticipants, this.state.totalParticipants)
             students.forEach((item) => {
                 if (item.name !== '') {
                     row[item['_id']] = item.name
@@ -46,15 +52,15 @@ export default class ProfileScreen extends React.Component {
 
     deleteUser = () => {
         axios.delete(
-            'http://192.168.0.162:3000/api/student/' + this.state.id)
+            'http://juanlubel.hopto.org:3000/api/student/' + this.state.id)
             .then(data => {
-                console.log(data.data)
+                // console.log(data.data)
             })
     }
 
     onLoad = async () => {
         await axios.get(
-            'http://192.168.0.162:3000/api/student/' + this.state.id)
+            'http://juanlubel.hopto.org:3000/api/student/' + this.state.id)
             .then((data) => {
                 this.setState({name: data.data.student.name})
             })
@@ -65,16 +71,22 @@ export default class ProfileScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <Text style={styles.text}>Welcome {this.state.name}</Text>
-                <Button
-                    title="Confirm"
-                    onPress={() => this.props.navigation.navigate(
-                        'Lobby',
-                        {
-                        voted: this.state.voted,
-                        user: this.state.id
-                        }
-                    )}
-                />
+                <Text style={styles.text}>{this.state.actualParticipants} / {this.state.totalParticipants}</Text>
+                {
+                    (this.state.show && (this.state.totalParticipants == this.state.actualParticipants)) ? (
+                        <Button
+                            title="Confirm"
+                            onPress={() => this.props.navigation.navigate(
+                                'Lobby',
+                                {
+                                    voted: this.state.voted,
+                                    user: this.state.id,
+                                    participants: this.state.participants
+                                }
+                            )}
+                        />) : null
+                }
+
                 <CustomMultiPicker
                     options={this.state.tableData}
                     search={true}
@@ -83,8 +95,20 @@ export default class ProfileScreen extends React.Component {
                     returnValue={"value"}
                     callback={(res) => {
                         this.state.voted = res
-                        console.log(res)
-                    }} // callback, array of selected items
+                        let show = false
+                        console.log(res);
+                        if (res.length === 1 ) {
+                            console.log(res[0])
+                            if (res[0] !== undefined) {
+                                show = true
+                            } else {
+                                show = false
+                            }
+                        }
+                        this.setState({show:show})
+                        console.log('show en picker ', show)
+
+                    }}
                     rowBackgroundColor={"#eee"}
                     iconColor={"#00a2dd"}
                     iconSize={30}
@@ -93,12 +117,11 @@ export default class ProfileScreen extends React.Component {
                     scrollViewHeight={3}
                 />
                 <NavigationEvents onWillBlur={event => {
-                    if (event.action.type === 'Navigation/BACK'){
+                    if (event.action.type === 'Navigation/BACK') {
                         this.deleteUser()
                     }
                 }
                 }/>
-
             </View>
         );
     }
@@ -110,9 +133,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
+        padding: '10%'
     },
     head: {height: 40, backgroundColor: '#808B97'},
-    text: {margin: 6},
+    text: {margin: 6, width: '50%'},
     row: {flexDirection: 'row', backgroundColor: '#FFF1C1'},
     btn: {width: 58, height: 18, backgroundColor: '#78B7BB', borderRadius: 2},
     btnText: {textAlign: 'center', color: '#fff'}
